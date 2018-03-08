@@ -34,8 +34,9 @@ My zombie map GPS
             zoom: 20,
             center: {lat: 51.156753, lng: 2.970855}
 			});
-	    var old_position = new google.maps.Marker ({
-		    position: new google.maps.LatLng(51.156753, 2.970855),
+// bepaal (oude) startpositie - position en icon onbelangrijk
+			old_position = new google.maps.Marker ({
+		    position: {lat: 51.156753, lng: 2.970855},
 		    map: zombie_map,
 		    icon: "player.png"
 	    	});
@@ -61,7 +62,8 @@ My zombie map GPS
 			alert("Geolocation doesn't work in your browser");
 			}
 	    }
-		
+
+// bepaal positie player op basis van gps en veeg oude positie weg		
 	function set_my_position(position) {
 		old_position.setMap(null);
 		var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -70,7 +72,7 @@ My zombie map GPS
 				map: zombie_map,
 				icon: "player.png"
 				});
-		old_position = marker;
+		old_position = player;
 
 	}
 </script>

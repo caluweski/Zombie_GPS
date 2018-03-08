@@ -19,6 +19,7 @@ My zombie map GPS
 <div id="zombie_map"></div>
 <script>
     var zombie_map;
+	var old_position;
 	var all_markers = [];
 	var data = `51.156939426787545 2.9710640466277027 hospital.png
 51.15643138361015 2.970205739742937 hospital.png
@@ -54,15 +55,23 @@ My zombie map GPS
 		else {
 			alert("Geolocation doesn't work in your browser");
 }
+	    var old_position = new google.maps.Marker ({
+		    position: new google.maps.LatLng(51.156753, 2.970855),
+		    map: zombie_map,
+		    icon: player
+	    	})
+	    }
 	}
 	
 	function set_my_position(position) {
+		old_position.setMap(null);
 		var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
 		var player = new google.maps.Marker({
 				position: pos,
 				map: zombie_map,
 				icon: "player.png"
 				});
+		old_position = marker;
 	}
 </script>
 </body>

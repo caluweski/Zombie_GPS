@@ -12,13 +12,17 @@
 }
 </style>
 </head>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBN5i6CBMypcVHxeMpgwRNDiMkQ_Z3upSo&callback=initMap">
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBN5i6CBMypcVHxeMpgwRNDiMkQ_Z3upSo&callback=initMap&libraries=geometry">
 </script>
 <body>
 My zombie map GPS
 <div id="zombie_map"></div>
 <script>
     var zombie_map;
+	var tolerance = 10;
+	var waarde = 0;
+	var score = 0;
+	alert("The Zombie Game begins");
 	var old_position;
 	var all_markers = [];
 	var data = `51.156939426787545 2.9710640466277027 hospital.png
@@ -27,7 +31,9 @@ My zombie map GPS
 51.15652222617842 2.9711015975539112 zombie.png
 51.156727462433366 2.9716219461028004 zombie.png
 51.1570706423283 2.9708709275786305 zombie.png
-51.15667699458648 2.970586613423052 zombie.png`;
+51.15667699458648 2.970586613423052 zombie.png
+51.204662 3.175265 hospital.png
+51.204676 3.175266 zombie.png`;
 	var markers = data.split("\n");
     function initMap() {
         zombie_map = new google.maps.Map(document.getElementById('zombie_map'), {
@@ -36,11 +42,11 @@ My zombie map GPS
 			});
 // bepaal (oude) startpositie - position en icon onbelangrijk
 			old_position = new google.maps.Marker ({
-		    position: {lat: 51.156753, lng: 2.970855},
-		    map: zombie_map,
-		    icon: "player.png"
+				position: {lat: 51.156753, lng: 2.970855},
+				map: zombie_map,
+				icon: "player.png"
 	    	});
-
+			
 		for(var i=0; i < markers.length; i++){
 			var marker_data = markers[i].trim();
 			marker_data = marker_data.split(" ");
@@ -64,6 +70,8 @@ My zombie map GPS
 	    }
 
 // bepaal positie player op basis van gps en veeg oude positie weg		
+// controleer afstand player met marker en breng alert
+// wis de gevonden marker uit de array
 	function set_my_position(position) {
 		old_position.setMap(null);
 		var pos = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
@@ -73,7 +81,16 @@ My zombie map GPS
 				icon: "player.png"
 				});
 		old_position = player;
-
+		for(var i=0; i < all_markers.length; i++){
+            var distance = google.maps.geometry.spherical.computeDistanceBetween(pos, all_markers[i].getPosition());
+			if( distance < tolerance ){
+				var what_is_it = all_markers[i].getIcon();
+				what_is_it = what_is_it.replace(".png","");
+                console.log("Found " + what_is_it + "!");
+				alert("Found the " + what_is_it);
+				all_markers[i].setMap(null);
+            }
+        } 
 	}
 </script>
 </body>
